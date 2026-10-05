@@ -156,6 +156,9 @@ func migrate(ctx context.Context, db *pgxpool.Pool) error {
 			floor TEXT NOT NULL DEFAULT '',
 			position INTEGER NOT NULL DEFAULT 0
 		)`,
+		`ALTER TABLE clinic_settings ENABLE ROW LEVEL SECURITY`,
+		`ALTER TABLE doctors ENABLE ROW LEVEL SECURITY`,
+		`ALTER TABLE rooms ENABLE ROW LEVEL SECURITY`,
 		`INSERT INTO clinic_settings (id) VALUES (1) ON CONFLICT (id) DO NOTHING`,
 	}
 	for _, statement := range statements {
