@@ -106,6 +106,9 @@ func main() {
 
 	if staticDir := os.Getenv("STATIC_DIR"); staticDir != "" {
 		mux.Handle("GET /assets/", http.StripPrefix("/", http.FileServer(http.Dir(staticDir))))
+		mux.HandleFunc("GET /login", func(w http.ResponseWriter, r *http.Request) {
+			http.ServeFile(w, r, filepath.Join(staticDir, "index.html"))
+		})
 		mux.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
 			if r.URL.Path != "/" {
 				http.NotFound(w, r)

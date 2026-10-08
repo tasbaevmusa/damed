@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react";
 import {
+  ArrowLeft,
   Building2,
   Check,
   ChevronDown,
@@ -10,7 +11,6 @@ import {
   MapPin,
   Pencil,
   Plus,
-  Printer,
   Save,
   Settings2,
   Stethoscope,
@@ -139,15 +139,16 @@ function kazakhAddress(value: string) {
 
 function App() {
   const [board, setBoard] = useState<Board>(initialBoard);
+  const [boardLoaded, setBoardLoaded] = useState(false);
   const [now, setNow] = useState(new Date());
   const [weather, setWeather] = useState<Weather | null>(null);
   const [boardError, setBoardError] = useState("");
-  const [adminOpen, setAdminOpen] = useState(false);
 
   const loadBoard = useCallback(async () => {
     try {
       const response = await api<{ board: Board }>('/api/board', { method: "GET", headers: {} });
       setBoard(response.board);
+      setBoardLoaded(true);
       setBoardError("");
     } catch (error) {
       setBoardError(error instanceof Error ? error.message : "Нет связи с сервером.");
@@ -213,6 +214,11 @@ function App() {
     setBoardError("");
   };
 
+  if (window.location.pathname.replace(/\/+$/, "") === "/login") {
+    if (!boardLoaded) return <main className="admin-page"><div className="admin-loading">{boardError ? <><span>{boardError}</span><button className="primary-button" onClick={() => void loadBoard()}>Попробовать ещё раз</button></> : "Загружаем расписание…"}</div></main>;
+    return <AdminPanel board={board} onSave={saveBoard} />;
+  }
+
   return (
     <main className="screen">
       <header className="topbar">
@@ -225,13 +231,12 @@ function App() {
           <div className="location-info"><MapPin size={23} strokeWidth={2.6} /><div><strong>{board.clinic.city || "Алматы"} / {board.clinic.city || "Алматы"} қ.</strong><span>{address}<br />{kazakhAddress(address)}</span></div></div>
           <div className="weather-info"><CloudSun size={26} strokeWidth={2.3} /><div><strong>{weather ? `${weather.temperature > 0 ? "+" : ""}${weather.temperature}°` : "—"}</strong><span>{weather?.description ?? "Погода"}<br />{weather?.descriptionKk ?? "Ауа райы"}</span></div></div>
           <div className="clock-info"><Clock3 size={24} strokeWidth={2.3} /><div><strong>{time}</strong><span>{date}</span></div></div>
-          <button className="admin-trigger" onClick={() => setAdminOpen(true)} aria-label="Админ-панель / Әкімші панелі"><Settings2 size={22} /><span>Админ-панель</span></button>
         </div>
       </header>
 
       <section className="board-layout">
         <div className="schedule-panel">
-          <div className="panel-heading"><div><span className="eyebrow">РАСПИСАНИЕ / ҚАБЫЛДАУ КЕСТЕСІ</span><h2>Врачи и время приёма / Дәрігерлер мен қабылдау уақыты</h2></div><div className="heading-actions"><button className="print-button" onClick={() => window.print()} aria-label="Печать / Басып шығару"><Printer size={16} /><span>Печать / Басып шығару</span></button><span className="today-pill"><span className="live-dot" /><span>{days.find((day) => day.key === today)?.full}</span><small>{days.find((day) => day.key === today)?.kkFull}</small></span></div></div>
+          <div className="panel-heading"><div><span className="eyebrow">РАСПИСАНИЕ / ҚАБЫЛДАУ КЕСТЕСІ</span><h2>Врачи и время приёма / Дәрігерлер мен қабылдау уақыты</h2></div><span className="today-pill"><span className="live-dot" /><span>{days.find((day) => day.key === today)?.full}</span><small>{days.find((day) => day.key === today)?.kkFull}</small></span></div>
           {boardError && <div className="connection-banner">{boardError}</div>}
           <div className="table-frame">
             <table className="schedule-table">
@@ -263,12 +268,11 @@ function App() {
           <div className="rooms-bottom"><span className="floor-mark"><Building2 size={15} /></span><span>Поможем найти нужный кабинет<small>Қажетті кабинетті табуға көмектесеміз</small></span></div>
         </aside>
       </section>
-      {adminOpen && <AdminPanel board={board} onClose={() => setAdminOpen(false)} onSave={saveBoard} />}
     </main>
   );
 }
 
-function AdminPanel({ board, onClose, onSave }: { board: Board; onClose: () => void; onSave: (board: Board) => Promise<void> }) {
+function AdminPanel({ board, onSave }: { board: Board; onSave: (board: Board) => Promise<void> }) {
   const [authenticated, setAuthenticated] = useState<boolean | null>(null);
   const [password, setPassword] = useState("");
   const [loginError, setLoginError] = useState("");
@@ -325,11 +329,11 @@ function AdminPanel({ board, onClose, onSave }: { board: Board; onClose: () => v
     setRoomEditor(null);
   };
 
-  return <div className="admin-backdrop" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}>
-    <section className="admin-panel" role="dialog" aria-modal="true" aria-labelledby="admin-title">
-      <header className="admin-header"><div><span className="admin-kicker">УПРАВЛЕНИЕ ТАБЛОМ</span><h2 id="admin-title">Админ-панель</h2></div><button className="icon-button" onClick={onClose} aria-label="Закрыть"><X /></button></header>
+  return <main className="admin-page">
+    <section className="admin-panel" aria-labelledby="admin-title">
+      <header className="admin-header"><div><span className="admin-kicker">УПРАВЛЕНИЕ ТАБЛОМ / ТАҚТАНЫ БАСҚАРУ</span><h2 id="admin-title">Админ-панель</h2></div><a className="admin-return" href="/"><ArrowLeft size={17} />На расписание</a></header>
       {authenticated === null ? <div className="admin-loading">Проверяем вход…</div> : !authenticated ? <form className="login-card" onSubmit={login}>
-        <span className="login-icon"><Settings2 size={25} /></span><h3>Вход администратора</h3><p>Введите пароль, чтобы изменить расписание и список кабинетов.</p>
+        <span className="login-icon"><Settings2 size={25} /></span><h3>Вход администратора / Әкімшіге кіру</h3><p>Введите пароль, чтобы изменить расписание и список кабинетов.<br />Кесте мен кабинеттерді өзгерту үшін құпиясөзді енгізіңіз.</p>
         <label className="field-label" htmlFor="admin-password">Пароль</label><input id="admin-password" className="text-input" type="password" autoComplete="current-password" value={password} onChange={(event) => setPassword(event.target.value)} autoFocus />
         {loginError && <div className="form-error">{loginError}</div>}<button className="primary-button full-button" type="submit">Войти <ChevronDown className="login-arrow" size={18} /></button>
       </form> : <>
@@ -357,7 +361,7 @@ function AdminPanel({ board, onClose, onSave }: { board: Board; onClose: () => v
       {doctorEditor && <DoctorEditor value={doctorEditor === "new" ? null : doctorEditor} rooms={draft.rooms} onCancel={() => setDoctorEditor(null)} onSave={updateDoctor} />}
       {roomEditor && <RoomEditor value={roomEditor === "new" ? null : roomEditor} onCancel={() => setRoomEditor(null)} onSave={updateRoom} />}
     </section>
-  </div>;
+  </main>;
 }
 
 function DoctorEditor({ value, rooms, onCancel, onSave }: { value: Doctor | null; rooms: Room[]; onCancel: () => void; onSave: (doctor: Doctor) => void }) {

@@ -62,20 +62,11 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px s
 .location-info > div, .weather-info > div, .clock-info > div { min-width: 0; display: flex; flex-direction: column; gap: 3px; }
 .location-info strong, .weather-info strong, .clock-info strong { color: #eef7ff; font-size: clamp(.96rem, 1.12vw, 1.33rem); font-weight: 750; line-height: 1.15; white-space: nowrap; }
 .location-info span, .weather-info span, .clock-info span { overflow: hidden; max-width: 210px; color: #a8bdd8; font-size: clamp(.66rem, .72vw, .82rem); font-weight: 500; line-height: 1.25; text-overflow: ellipsis; white-space: normal; }
-.admin-trigger { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 11px 13px; border: 1px solid rgba(45, 180, 222, .38); border-radius: 12px; color: #b8cbe3; background: rgba(8, 40, 78, .66); cursor: pointer; transition: .18s ease; }
-.admin-trigger span { font-size: .78rem; font-weight: 700; white-space: nowrap; }
-.admin-trigger svg { color: #41cdea; }
-.admin-trigger:hover { border-color: rgba(53, 218, 244, .8); color: white; background: rgba(10, 64, 103, .76); }
-
 .board-layout { height: calc(100dvh - 124px); min-height: 570px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(290px, 21%); gap: 0; padding: 13px 1.5vw 12px; }
 .schedule-panel { min-width: 0; min-height: 0; display: flex; flex-direction: column; padding-right: 1.15vw; }
 .panel-heading { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 65px; padding: 0 4px 9px; }
 .eyebrow { color: #39cdea; font-size: .67rem; font-weight: 800; letter-spacing: .2em; }
 .panel-heading h2, .rooms-title h2 { margin: 4px 0 0; color: #f3f8ff; font-size: clamp(1rem, 1.35vw, 1.48rem); font-weight: 750; letter-spacing: -.025em; }
-.heading-actions { display: flex; align-items: center; justify-content: flex-end; gap: 8px; flex: 0 0 auto; }
-.print-button { min-height: 34px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 0 9px; border: 1px solid rgba(45, 180, 222, .38); border-radius: 9px; color: #b8cbe3; background: rgba(8, 40, 78, .66); font-size: .7rem; font-weight: 750; cursor: pointer; }
-.print-button svg { color: #41cdea; }
-.print-button:hover { border-color: rgba(53, 218, 244, .8); color: white; background: rgba(10, 64, 103, .76); }
 .today-pill { display: flex; align-items: center; gap: 7px; padding: 6px 9px; border: 1px solid rgba(32, 213, 245, .29); border-radius: 999px; color: #a5cee4; background: rgba(7, 59, 92, .44); font-size: .7rem; font-weight: 700; }
 .today-pill small { color: #73d8ef; font-size: .64rem; }
 .live-dot, .footer-dot { width: 8px; height: 8px; border-radius: 50%; background: #25ddae; box-shadow: 0 0 11px rgba(37, 221, 174, .55); }
@@ -139,11 +130,13 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px s
 .floor-mark { width: 24px; height: 24px; display: grid; place-items: center; border-radius: 8px; color: #43d2ed; background: rgba(11, 122, 157, .22); }
 
 /* Administration */
-.admin-backdrop { position: fixed; z-index: 20; inset: 0; display: flex; justify-content: flex-end; background: rgba(2, 9, 23, .72); backdrop-filter: blur(7px); animation: fade-in .16s ease-out; }
-.admin-panel { position: relative; width: min(620px, 100vw); height: 100%; display: flex; flex-direction: column; overflow: hidden; border-left: 1px solid rgba(70, 189, 224, .28); background: #f4f7fb; color: #15263d; box-shadow: -20px 0 70px rgba(0, 0, 0, .3); animation: slide-in .2s ease-out; }
+.admin-page { min-height: 100dvh; display: grid; place-items: center; padding: 24px; background: linear-gradient(145deg, #071b3a, #0a315a); }
+.admin-panel { position: relative; width: min(980px, 100%); height: min(900px, calc(100dvh - 48px)); min-height: min(500px, calc(100dvh - 32px)); display: flex; flex-direction: column; overflow: hidden; border: 1px solid rgba(70, 189, 224, .32); border-radius: 18px; background: #f4f7fb; color: #15263d; box-shadow: 0 24px 70px rgba(0, 0, 0, .3); }
 .admin-header { min-height: 85px; display: flex; align-items: center; justify-content: space-between; padding: 18px 27px; border-bottom: 1px solid #e1e8f0; background: white; }
 .admin-kicker { color: #1887a8; font-size: .64rem; font-weight: 800; letter-spacing: .17em; }
 .admin-header h2 { margin: 4px 0 0; color: #12243b; font-size: 1.4rem; font-weight: 800; letter-spacing: -.03em; }
+.admin-return { min-height: 38px; display: inline-flex; align-items: center; justify-content: center; gap: 7px; padding: 0 11px; border: 1px solid #e0e7ef; border-radius: 9px; color: #53677f; text-decoration: none; font-size: .78rem; font-weight: 700; }
+.admin-return:hover { color: #176b82; background: #f1f8fa; }
 .icon-button { width: 38px; height: 38px; display: grid; place-items: center; border: 1px solid #e0e7ef; border-radius: 11px; color: #53677f; background: #fff; cursor: pointer; }
 .icon-button:hover { color: #13253b; background: #f3f7fb; }
 .admin-loading { flex: 1; display: grid; place-items: center; color: #6a7d93; }
@@ -234,8 +227,6 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px s
   .header-info { gap: 12px; padding-left: 16px; }
   .location-info { flex: 1.05; }
   .weather-info { flex: .58; }
-  .admin-trigger { padding-inline: 10px; }
-  .admin-trigger span { display: none; }
   .board-layout { grid-template-columns: minmax(0, 1fr) 250px; padding-inline: 20px; }
   .schedule-panel { padding-right: 17px; }
   .rooms-panel { padding-left: 17px; }
@@ -275,8 +266,6 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px s
   .clock-info svg { width: 20px; }
   .clock-info strong { font-size: .95rem; }
   .clock-info span { font-size: .66rem; }
-  .admin-trigger { width: 38px; height: 38px; padding: 0; border-radius: 10px; }
-  .admin-trigger svg { width: 19px; }
   .title-block { grid-column: 1 / -1; }
   .title-block h1 { font-size: 1.04rem; }
   .title-block span { font-size: .61rem; }
@@ -298,7 +287,8 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px s
   .rooms-title h2 { font-size: 1.04rem; }
   .rooms-scroll { overflow: visible; }
   .floor-group { display: inline-block; width: 100%; vertical-align: top; }
-  .admin-panel { width: 100vw; }
+  .admin-page { padding: 0; }
+  .admin-panel { width: 100%; height: 100dvh; min-height: 100dvh; border: 0; border-radius: 0; }
   .admin-header { min-height: 76px; padding: 14px 17px; }
   .admin-content { padding: 18px 16px; }
   .admin-tabs { padding-inline: 10px; gap: 2px; }
@@ -335,7 +325,7 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px s
   .location-info > svg { width: 4mm; height: 4mm; }
   .location-info strong { font-size: 7.4pt; }
   .location-info span { max-width: none; font-size: 6.1pt; line-height: 1.12; }
-  .weather-info, .admin-trigger, .print-button, .today-pill { display: none !important; }
+  .weather-info, .today-pill { display: none !important; }
   .clock-info { flex: 0 0 auto; gap: 1.5mm; }
   .clock-info > svg { width: 4mm; height: 4mm; }
   .clock-info strong { font-size: 8pt; }
@@ -381,6 +371,6 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px s
   .room-separator { color: #6085a4; }
   .room-name { gap: .35mm; }
   .room-name small { color: #167598; font-size: 5.3pt; line-height: 1.04; }
-  .rooms-empty, .rooms-bottom, .admin-backdrop { display: none !important; }
+  .rooms-empty, .rooms-bottom { display: none !important; }
   .schedule-panel, .rooms-panel, .floor-group, .schedule-table tr { break-inside: avoid; page-break-inside: avoid; }
 }
