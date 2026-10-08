@@ -73,6 +73,7 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px s
 .connection-banner { flex: 0 0 auto; margin: 0 0 10px; padding: 10px 14px; border: 1px solid rgba(255, 183, 88, .34); border-radius: 9px; color: #ffd39a; background: rgba(107, 59, 13, .2); font-size: .82rem; }
 .table-frame { flex: 1 1 auto; min-height: 0; overflow: auto; border: 1px solid rgba(36, 153, 211, .44); border-radius: 11px; background: rgba(5, 25, 55, .64); box-shadow: 0 10px 30px rgba(0, 0, 0, .14); scrollbar-color: #1479a0 transparent; scrollbar-width: thin; }
 .schedule-table { width: 100%; border-collapse: separate; border-spacing: 0; table-layout: fixed; }
+.schedule-table tbody.print-doctors { display: none; }
 .schedule-table th { position: sticky; z-index: 2; top: 0; height: 45px; padding: 5px 4px; border-right: 1px solid rgba(89, 216, 248, .38); border-bottom: 1px solid rgba(89, 216, 248, .44); color: #f3fbff; background: linear-gradient(180deg, #0989b7, #0879a7); font-size: clamp(.67rem, .78vw, .84rem); font-weight: 800; line-height: 1.08; text-align: center; white-space: normal; }
 .schedule-table th > span, .schedule-table th > small { display: block; }
 .schedule-table th > small { margin-top: 2px; color: #c8f4ff; font-size: .78em; font-weight: 650; }
@@ -105,9 +106,6 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px s
 .board-footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 39px; padding: 5px 4px 0; color: #7592b4; font-size: clamp(.62rem, .68vw, .74rem); font-weight: 550; }
 .board-footer > span:first-child { display: flex; align-items: flex-start; gap: 8px; }
 .board-footer small, .rooms-bottom small { display: block; margin-top: 2px; color: #46b8d3; font-size: .9em; }
-.doctor-page-indicator { flex: 0 0 auto; text-align: center; }
-.doctor-page-indicator strong { color: #d8f4ff; font-size: .75rem; font-weight: 800; white-space: nowrap; }
-.doctor-page-indicator small { color: #57c9e1; font-size: .67rem; white-space: nowrap; }
 .footer-dot { width: 7px; height: 7px; }
 
 .rooms-panel { min-width: 0; min-height: 0; display: flex; flex-direction: column; padding: 7px 0 0 1.15vw; border-left: 1px solid rgba(29, 198, 238, .57); }
@@ -244,17 +242,16 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px s
   .header-info { grid-column: 2; grid-row: 1; padding: 0; }
   .location-info { display: none; }
   .board-layout { height: calc(100dvh - 155px); min-height: 500px; grid-template-columns: minmax(0, 1fr) 220px; padding: 15px 20px; }
-  .table-frame { overflow-x: auto; }
-  .schedule-table { min-width: 875px; }
-  .schedule-table th.specialty-col { width: 19%; }
-  .schedule-table th.doctor-col { width: 28%; }
-  .schedule-table th.room-col { width: 8%; }
-  .schedule-table th:not(.specialty-col):not(.doctor-col):not(.room-col) { width: 6.428%; }
+  .table-frame { overflow: hidden; }
+  .schedule-table { min-width: 0; }
+  .schedule-table th.specialty-col { width: 15%; }
+  .schedule-table th.doctor-col { width: 34%; }
+  .schedule-table th.room-col { width: 7%; }
+  .schedule-table th:not(.specialty-col):not(.doctor-col):not(.room-col) { width: 6.2857%; }
   .schedule-table th, .schedule-table td { padding-inline: 5px; }
   .schedule-table td.specialty-cell { padding-left: 9px; }
   .schedule-table td.doctor-cell { padding-left: 8px; }
   .rooms-panel { padding-left: 13px; }
-  .board-footer > span:last-child { display: none; }
 }
 
 @media (max-width: 760px) {
@@ -309,6 +306,59 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px s
   .section-title-row { align-items: flex-start; flex-direction: column; }
 }
 
+@media screen and (min-width: 761px) and (max-height: 880px) {
+  .topbar { row-gap: 2px; padding: 5px 12px; }
+  .brand-lockup { min-height: 34px; gap: 8px; }
+  .brand-mark { width: 32px; height: 32px; }
+  .brand-copy strong { font-size: 1rem; }
+  .brand-copy span { font-size: .5rem; }
+  .title-block { gap: 1px; padding: 0; }
+  .title-block h1 { font-size: .92rem; }
+  .title-block span { font-size: .54rem; }
+  .header-info { gap: 6px; }
+  .clock-info { gap: 4px; }
+  .clock-info > svg { width: 17px; height: 17px; }
+  .clock-info strong { font-size: .82rem; }
+  .clock-info span { font-size: .58rem; }
+  .board-layout { height: calc(100dvh - 82px); min-height: 0; grid-template-columns: minmax(0, 1fr) 210px; padding: 5px 10px 6px; }
+  .schedule-panel { padding-right: 10px; }
+  .panel-heading { min-height: 38px; padding: 0 2px 4px; gap: 6px; }
+  .panel-heading .eyebrow { font-size: .5rem; letter-spacing: .1em; }
+  .panel-heading h2 { margin-top: 2px; font-size: .78rem; }
+  .today-pill { gap: 4px; padding: 4px 6px; font-size: .56rem; }
+  .today-pill small { font-size: .5rem; }
+  .live-dot { width: 5px; height: 5px; }
+  .table-frame { overflow: hidden; }
+  .schedule-table { min-width: 0; }
+  .schedule-table th { height: 28px; padding: 2px; font-size: .58rem; }
+  .schedule-table th > small { margin-top: 1px; font-size: .72em; }
+  .schedule-table th.specialty-col { width: 15%; }
+  .schedule-table th.doctor-col { width: 34%; }
+  .schedule-table th.room-col { width: 7%; }
+  .schedule-table th:not(.specialty-col):not(.doctor-col):not(.room-col) { width: 6.2857%; }
+  .schedule-table td { height: clamp(20px, 4.2vh, 27px); padding: 1px 2px; font-size: .5rem; line-height: 1; }
+  .schedule-table td.specialty-cell { padding-left: 3px; font-size: .55rem; }
+  .schedule-table td.specialty-cell > small { margin-top: 1px; font-size: .82em; }
+  .schedule-table td.doctor-cell { padding-left: 3px; font-size: .62rem; letter-spacing: -.04em; }
+  .schedule-table td.room-cell { font-size: .62rem; }
+  .schedule-table td.hours-cell { font-size: .46rem; }
+  .board-footer { display: none; }
+  .rooms-panel { padding: 2px 0 0 8px; }
+  .rooms-title { min-height: 43px; gap: 7px; padding-bottom: 5px; }
+  .rooms-title > svg { width: 22px; height: 22px; }
+  .rooms-title .eyebrow { font-size: .46rem; }
+  .rooms-title h2 { margin-top: 2px; font-size: .76rem; }
+  .rooms-title small { margin-top: 1px; font-size: .54rem; }
+  .rooms-scroll { overflow: hidden; padding: 3px 0; }
+  .floor-group { padding-bottom: 3px; margin-bottom: 3px; }
+  .floor-group h3 { min-height: 19px; padding: 2px 6px; margin: 1px 0 3px; font-size: .55rem; }
+  .floor-group ul { gap: 2px; padding-left: 3px; }
+  .floor-group li { grid-template-columns: 24px 7px minmax(0, 1fr); gap: 2px; font-size: .58rem; line-height: 1.05; }
+  .room-name { gap: 0; }
+  .room-name small { font-size: .8em; line-height: 1.04; }
+  .rooms-bottom { display: none; }
+}
+
 @page { size: A4 landscape; margin: 5mm; }
 
 @media print {
@@ -341,6 +391,8 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px s
   .panel-heading h2 { margin-top: 1mm; font-size: 8.5pt; }
   .table-frame { flex: 0 0 auto; min-height: 0; overflow: visible; border-radius: 0; box-shadow: none; }
   .schedule-table { width: 100%; min-width: 0; border-collapse: collapse; }
+  .schedule-table tbody.screen-doctors { display: none; }
+  .schedule-table tbody.print-doctors { display: table-row-group; }
   .schedule-table th { position: static; height: 9mm; padding: 1mm .7mm; border: 1px solid #78b5d8; color: #fff; background: #087fa9; font-size: 6.3pt; line-height: 1.02; }
   .schedule-table th:first-child, .schedule-table th:last-child { border-radius: 0; }
   .schedule-table th.specialty-col { width: 19%; padding-left: 1.5mm; }

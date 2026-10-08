@@ -97,7 +97,7 @@ function weatherDescriptionKk(code: number) {
 
 function kazakhSpecialty(value: string) {
   const translations: Record<string, string> = {
-    "Врач ультразвуковой диагностики": "Ультрадыбыстық диагностика дәрігері",
+    "Врач ультразвуковой диагностики": "УДЗ дәрігері",
     "Врач-рентгенолог": "Рентгенолог",
     Гастроэнтеролог: "Гастроэнтеролог",
     Кардиолог: "Кардиолог",
@@ -143,21 +143,11 @@ function App() {
   const [now, setNow] = useState(new Date());
   const [weather, setWeather] = useState<Weather | null>(null);
   const [boardError, setBoardError] = useState("");
-  const [doctorPage, setDoctorPage] = useState(0);
-  const doctorsPerPage = 7;
-  const doctorPageCount = Math.max(1, Math.ceil(board.doctors.length / doctorsPerPage));
-  const activeDoctorPage = Math.min(doctorPage, doctorPageCount - 1);
-  const doctorPageStart = activeDoctorPage * doctorsPerPage;
-  const visibleDoctors = board.doctors.slice(doctorPageStart, doctorPageStart + doctorsPerPage);
-
-  useEffect(() => {
-    setDoctorPage(0);
-    if (doctorPageCount <= 1) return;
-    const timer = window.setInterval(() => {
-      setDoctorPage((page) => (page + 1) % doctorPageCount);
-    }, 15_000);
-    return () => window.clearInterval(timer);
-  }, [doctorPageCount]);
+  const visibleDoctors = board.doctors;
+  const renderDoctorRow = (doctor: Doctor, keyPrefix: string) => <tr key={`${keyPrefix}-${doctor.id}`}>
+    <td className="specialty-cell"><span>{doctor.specialization === "Врач ультразвуковой диагностики" ? "Врач УЗИ" : doctor.specialization || "—"}</span><small>{kazakhSpecialty(doctor.specialization)}</small></td><td className="doctor-cell" title={doctor.fullName}>{doctor.fullName || "—"}</td><td className="room-cell">{doctor.room || "—"}</td>
+    {days.map((day) => <td className={`hours-cell ${day.key === today ? "today-column" : ""}`} key={day.key}>{doctor.schedule?.[day.key] || <span className="off-mark">—</span>}</td>)}
+  </tr>;
 
   const loadBoard = useCallback(async () => {
     try {
@@ -261,15 +251,13 @@ function App() {
                 <th className="room-col"><span>Каб.</span><small>Кабинет</small></th>
                 {days.map((day) => <th className={day.key === today ? "today-column" : ""} key={day.key}><span>{day.short}</span><small>{day.kkShort}</small></th>)}
               </tr></thead>
-              <tbody>
-                {board.doctors.length ? visibleDoctors.map((doctor) => <tr key={doctor.id}>
-                  <td className="specialty-cell"><span>{doctor.specialization || "—"}</span><small>{kazakhSpecialty(doctor.specialization)}</small></td><td className="doctor-cell" title={doctor.fullName}>{doctor.fullName || "—"}</td><td className="room-cell">{doctor.room || "—"}</td>
-                  {days.map((day) => <td className={`hours-cell ${day.key === today ? "today-column" : ""}`} key={day.key}>{doctor.schedule?.[day.key] || <span className="off-mark">—</span>}</td>)}
-                </tr>) : <tr className="empty-row"><td colSpan={10}><div className="empty-state"><span className="empty-icon"><Stethoscope size={28} /></span><strong>Расписание пока не заполнено</strong><span>Добавьте врачей через админ-панель</span></div></td></tr>}
-              </tbody>
+              {board.doctors.length ? <>
+                <tbody className="screen-doctors">{visibleDoctors.map((doctor) => renderDoctorRow(doctor, "screen"))}</tbody>
+                <tbody className="print-doctors">{board.doctors.map((doctor) => renderDoctorRow(doctor, "print"))}</tbody>
+              </> : <tbody><tr className="empty-row"><td colSpan={10}><div className="empty-state"><span className="empty-icon"><Stethoscope size={28} /></span><strong>Расписание пока не заполнено</strong><span>Добавьте врачей через админ-панель</span></div></td></tr></tbody>}
             </table>
           </div>
-          <footer className="board-footer"><span><span className="footer-dot" /><span>Расписание обновляется автоматически<small>Кесте автоматты түрде жаңартылады</small></span></span>{doctorPageCount > 1 && <span className="doctor-page-indicator" aria-live="polite"><strong>Врачи / Дәрігерлер {doctorPageStart + 1}–{Math.min(doctorPageStart + doctorsPerPage, board.doctors.length)} / {board.doctors.length}</strong><small>Смена / ауысу · 15 сек</small></span>}<span>Для уточнения времени обратитесь в регистратуру<small>Уақытты нақтылау үшін тіркеу бөліміне хабарласыңыз</small></span></footer>
+          <footer className="board-footer"><span><span className="footer-dot" /><span>Расписание обновляется автоматически<small>Кесте автоматты түрде жаңартылады</small></span></span><span>Для уточнения времени обратитесь в регистратуру<small>Уақытты нақтылау үшін тіркеу бөліміне хабарласыңыз</small></span></footer>
         </div>
 
         <aside className="rooms-panel">
