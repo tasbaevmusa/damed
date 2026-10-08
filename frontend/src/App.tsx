@@ -196,6 +196,7 @@ function App() {
   const today = dayInZone(now, timezone);
   const time = new Intl.DateTimeFormat("ru-RU", { hour: "2-digit", minute: "2-digit", timeZone: timezone }).format(now);
   const date = new Intl.DateTimeFormat("ru-RU", { day: "2-digit", month: "2-digit", year: "numeric", timeZone: timezone }).format(now);
+  const address = board.clinic.address || "ул. Макатаева, 141/77";
   const roomGroups = useMemo(() => {
     const groups = new Map<string, Room[]>();
     for (const room of board.rooms) {
@@ -221,7 +222,7 @@ function App() {
         </div>
         <div className="title-block"><h1>Расписание приёма врачей</h1><span>Дәрігерлердің қабылдау кестесі</span></div>
         <div className="header-info">
-          <div className="location-info"><MapPin size={23} strokeWidth={2.6} /><div><strong>{board.clinic.city || "Алматы"} / {board.clinic.city || "Алматы"} қ.</strong><span>{board.clinic.address || "Адрес не указан"}<br />{kazakhAddress(board.clinic.address)}</span></div></div>
+          <div className="location-info"><MapPin size={23} strokeWidth={2.6} /><div><strong>{board.clinic.city || "Алматы"} / {board.clinic.city || "Алматы"} қ.</strong><span>{address}<br />{kazakhAddress(address)}</span></div></div>
           <div className="weather-info"><CloudSun size={26} strokeWidth={2.3} /><div><strong>{weather ? `${weather.temperature > 0 ? "+" : ""}${weather.temperature}°` : "—"}</strong><span>{weather?.description ?? "Погода"}<br />{weather?.descriptionKk ?? "Ауа райы"}</span></div></div>
           <div className="clock-info"><Clock3 size={24} strokeWidth={2.3} /><div><strong>{time}</strong><span>{date}</span></div></div>
           <button className="admin-trigger" onClick={() => setAdminOpen(true)} aria-label="Админ-панель / Әкімші панелі"><Settings2 size={22} /><span>Админ-панель</span></button>
