@@ -87,10 +87,10 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px s
 .schedule-table th > small { margin-top: 2px; color: #c8f4ff; font-size: .78em; font-weight: 650; }
 .schedule-table th:first-child { border-radius: 12px 0 0 0; }
 .schedule-table th:last-child { border-right: 0; border-radius: 0 12px 0 0; }
-.schedule-table th.specialty-col { width: 21%; text-align: left; padding-left: 10px; }
-.schedule-table th.doctor-col { width: 30%; text-align: left; padding-left: 10px; }
+.schedule-table th.specialty-col { width: 19%; text-align: left; padding-left: 10px; }
+.schedule-table th.doctor-col { width: 28%; text-align: left; padding-left: 10px; }
 .schedule-table th.room-col { width: 8%; }
-.schedule-table th:not(.specialty-col):not(.doctor-col):not(.room-col) { width: 5.857%; }
+.schedule-table th:not(.specialty-col):not(.doctor-col):not(.room-col) { width: 6.428%; }
 .schedule-table td { height: 36px; padding: 4px 4px; border-right: 1px solid rgba(33, 123, 181, .46); border-bottom: 1px solid rgba(33, 123, 181, .42); color: #e6effb; background: rgba(10, 45, 89, .57); font-size: clamp(.68rem, .76vw, .82rem); font-weight: 600; line-height: 1.05; text-align: center; }
 .schedule-table tbody tr:nth-child(even) td { background: rgba(9, 38, 77, .72); }
 .schedule-table tbody tr:hover td { background: rgba(14, 67, 111, .78); }
@@ -102,7 +102,7 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px s
 .schedule-table td.specialty-cell > small { margin-top: 2px; color: #79d9ed; font-size: .88em; font-weight: 600; }
 .schedule-table td.doctor-cell { padding-left: 10px; font-size: clamp(.68rem, .76vw, .82rem); font-weight: 600; letter-spacing: -.018em; white-space: nowrap; }
 .schedule-table td.room-cell { color: #d7ecfa; font-weight: 700; }
-.schedule-table td.hours-cell { color: #c0edff; font-size: clamp(.6rem, .67vw, .73rem); font-weight: 750; white-space: nowrap; }
+.schedule-table td.hours-cell { color: #c0edff; font-size: clamp(.52rem, .58vw, .66rem); font-weight: 750; white-space: nowrap; }
 .schedule-table .today-column { background-color: rgba(8, 113, 148, .44) !important; box-shadow: inset 1px 0 rgba(36, 218, 241, .21), inset -1px 0 rgba(36, 218, 241, .21); }
 .schedule-table thead .today-column { background: linear-gradient(180deg, #10a2c7, #078eb5) !important; }
 .off-mark { color: #46caed; font-size: 1.1em; }
@@ -252,10 +252,10 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px s
   .board-layout { height: calc(100dvh - 155px); min-height: 500px; grid-template-columns: minmax(0, 1fr) 220px; padding: 15px 20px; }
   .table-frame { overflow-x: auto; }
   .schedule-table { min-width: 875px; }
-  .schedule-table th.specialty-col { width: 21%; }
-  .schedule-table th.doctor-col { width: 30%; }
+  .schedule-table th.specialty-col { width: 19%; }
+  .schedule-table th.doctor-col { width: 28%; }
   .schedule-table th.room-col { width: 8%; }
-  .schedule-table th:not(.specialty-col):not(.doctor-col):not(.room-col) { width: 5.857%; }
+  .schedule-table th:not(.specialty-col):not(.doctor-col):not(.room-col) { width: 6.428%; }
   .schedule-table th, .schedule-table td { padding-inline: 5px; }
   .schedule-table td.specialty-cell { padding-left: 9px; }
   .schedule-table td.doctor-cell { padding-left: 8px; }
@@ -349,10 +349,10 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px s
   .schedule-table { width: 100%; min-width: 0; border-collapse: collapse; }
   .schedule-table th { position: static; height: 9mm; padding: 1mm .7mm; border: 1px solid #78b5d8; color: #fff; background: #087fa9; font-size: 6.3pt; line-height: 1.02; }
   .schedule-table th:first-child, .schedule-table th:last-child { border-radius: 0; }
-  .schedule-table th.specialty-col { width: 21%; padding-left: 1.5mm; }
-  .schedule-table th.doctor-col { width: 30%; padding-left: 1.5mm; }
+  .schedule-table th.specialty-col { width: 19%; padding-left: 1.5mm; }
+  .schedule-table th.doctor-col { width: 28%; padding-left: 1.5mm; }
   .schedule-table th.room-col { width: 8%; }
-  .schedule-table th:not(.specialty-col):not(.doctor-col):not(.room-col) { width: 5.857%; }
+  .schedule-table th:not(.specialty-col):not(.doctor-col):not(.room-col) { width: 6.428%; }
   .schedule-table th > small { margin-top: .4mm; font-size: 5.4pt; }
   .schedule-table td { height: 8.2mm; padding: .8mm .7mm; border: 1px solid #b8d5e7; color: #12345e; background: #f7fbfe; font-size: 6.2pt; line-height: 1.05; }
   .schedule-table tbody tr:nth-child(even) td { background: #e8f4fb; }
