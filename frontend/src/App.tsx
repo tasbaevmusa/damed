@@ -10,6 +10,7 @@ import {
   MapPin,
   Pencil,
   Plus,
+  Printer,
   Save,
   Settings2,
   Stethoscope,
@@ -18,13 +19,13 @@ import {
 } from "lucide-react";
 
 const days = [
-  { key: "mon", short: "Пн", full: "Понедельник" },
-  { key: "tue", short: "Вт", full: "Вторник" },
-  { key: "wed", short: "Ср", full: "Среда" },
-  { key: "thu", short: "Чт", full: "Четверг" },
-  { key: "fri", short: "Пт", full: "Пятница" },
-  { key: "sat", short: "Сб", full: "Суббота" },
-  { key: "sun", short: "Вс", full: "Воскресенье" },
+  { key: "mon", short: "Пн", kkShort: "Дс", full: "Понедельник", kkFull: "Дүйсенбі" },
+  { key: "tue", short: "Вт", kkShort: "Сс", full: "Вторник", kkFull: "Сейсенбі" },
+  { key: "wed", short: "Ср", kkShort: "Ср", full: "Среда", kkFull: "Сәрсенбі" },
+  { key: "thu", short: "Чт", kkShort: "Бс", full: "Четверг", kkFull: "Бейсенбі" },
+  { key: "fri", short: "Пт", kkShort: "Жм", full: "Пятница", kkFull: "Жұма" },
+  { key: "sat", short: "Сб", kkShort: "Сб", full: "Суббота", kkFull: "Сенбі" },
+  { key: "sun", short: "Вс", kkShort: "Жс", full: "Воскресенье", kkFull: "Жексенбі" },
 ] as const;
 
 type DayKey = (typeof days)[number]["key"];
@@ -36,7 +37,7 @@ type Board = {
   doctors: Doctor[];
   rooms: Room[];
 };
-type Weather = { temperature: number; description: string; code: number };
+type Weather = { temperature: number; description: string; descriptionKk: string; code: number };
 
 const blankSchedule = (): Schedule => ({ mon: "", tue: "", wed: "", thu: "", fri: "", sat: "", sun: "" });
 const initialBoard: Board = {
@@ -82,6 +83,60 @@ function weatherDescription(code: number) {
   return "Гроза";
 }
 
+function weatherDescriptionKk(code: number) {
+  if (code === 0) return "Ашық";
+  if (code <= 3) return "Құбылмалы бұлтты";
+  if (code <= 48) return "Тұман";
+  if (code <= 57) return "Сіркіреме жауын";
+  if (code <= 67) return "Жаңбыр";
+  if (code <= 77) return "Қар";
+  if (code <= 82) return "Нөсер";
+  if (code <= 86) return "Қар жауады";
+  return "Найзағай";
+}
+
+function kazakhSpecialty(value: string) {
+  const translations: Record<string, string> = {
+    "Врач ультразвуковой диагностики": "Ультрадыбыстық диагностика дәрігері",
+    "Врач-рентгенолог": "Рентгенолог",
+    Гастроэнтеролог: "Гастроэнтеролог",
+    Кардиолог: "Кардиолог",
+    "Врач-офтальмолог": "Көз дәрігері",
+    Нефролог: "Нефролог",
+    Эндокринолог: "Эндокринолог",
+    Терапевт: "Жалпы практика дәрігері",
+  };
+  return translations[value.trim()] ?? "Мамандық";
+}
+
+function kazakhRoomName(value: string) {
+  const translations: Record<string, string> = {
+    "Гастроэнтеролог / Кардиолог": "Гастроэнтерология және кардиология кабинеттері",
+    "Врач УЗИ": "УДЗ дәрігері",
+    Офтальмолог: "Көз дәрігері",
+    "Кардиолог / Нефролог": "Кардиология және нефрология кабинеттері",
+    "Эндокринолог / Терапевт": "Эндокринолог / жалпы практика дәрігері",
+  };
+  if (translations[value]) return translations[value];
+  const translated = value.match(/^(.*?)\s*\((.*?)\)\s*$/);
+  if (translated) return translated[2];
+  return value;
+}
+
+function kazakhFloor(value: string) {
+  const translations: Record<string, string> = {
+    "1 этаж": "1 ҚАБАТ",
+    "Цокольный этаж": "ЖЕРТӨЛЕ ҚАБАТЫ",
+  };
+  return translations[value] ?? "ҚАБАТ";
+}
+
+function kazakhAddress(value: string) {
+  if (!value) return "Мекенжай көрсетілмеген";
+  if (value.trim().toLowerCase() === "ул. макатаева, 141/77") return "Мақатаев көшесі, 141/77";
+  return value.replace(/^ул\.\s*/i, "көшесі ");
+}
+
 function App() {
   const [board, setBoard] = useState<Board>(initialBoard);
   const [now, setNow] = useState(new Date());
@@ -124,7 +179,7 @@ function App() {
         const result = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${place.latitude}&longitude=${place.longitude}&current=temperature_2m,weather_code&timezone=${encodeURIComponent(board.clinic.timezone || "auto")}`);
         const data = await result.json();
         if (!result.ok || typeof data.current?.temperature_2m !== "number") throw new Error("Погода недоступна");
-        if (active) setWeather({ temperature: Math.round(data.current.temperature_2m), code: data.current.weather_code, description: weatherDescription(data.current.weather_code) });
+        if (active) setWeather({ temperature: Math.round(data.current.temperature_2m), code: data.current.weather_code, description: weatherDescription(data.current.weather_code), descriptionKk: weatherDescriptionKk(data.current.weather_code) });
       } catch {
         if (active) setWeather(null);
       }
@@ -162,44 +217,49 @@ function App() {
       <header className="topbar">
         <div className="brand-lockup">
           <div className="brand-mark" aria-hidden="true"><span>+</span></div>
-          <div className="brand-copy"><strong>{board.clinic.name || "Клиника"}</strong><span>КЛИНИКА</span></div>
+          <div className="brand-copy"><strong>{board.clinic.name || "Клиника"}</strong><span>КЛИНИКА / ЕМХАНА</span></div>
         </div>
-        <div className="title-block"><h1>Расписание приёма врачей</h1><span>Информация для пациентов</span></div>
+        <div className="title-block"><h1>Расписание приёма врачей</h1><span>Дәрігерлердің қабылдау кестесі</span></div>
         <div className="header-info">
-          <div className="location-info"><MapPin size={23} strokeWidth={2.6} /><div><strong>г. {board.clinic.city || "—"}</strong><span>{board.clinic.address || "Адрес не указан"}</span></div></div>
-          <div className="weather-info"><CloudSun size={26} strokeWidth={2.3} /><div><strong>{weather ? `${weather.temperature > 0 ? "+" : ""}${weather.temperature}°` : "—"}</strong><span>{weather?.description ?? "Погода"}</span></div></div>
+          <div className="location-info"><MapPin size={23} strokeWidth={2.6} /><div><strong>{board.clinic.city || "Алматы"} / {board.clinic.city || "Алматы"} қ.</strong><span>{board.clinic.address || "Адрес не указан"}<br />{kazakhAddress(board.clinic.address)}</span></div></div>
+          <div className="weather-info"><CloudSun size={26} strokeWidth={2.3} /><div><strong>{weather ? `${weather.temperature > 0 ? "+" : ""}${weather.temperature}°` : "—"}</strong><span>{weather?.description ?? "Погода"}<br />{weather?.descriptionKk ?? "Ауа райы"}</span></div></div>
           <div className="clock-info"><Clock3 size={24} strokeWidth={2.3} /><div><strong>{time}</strong><span>{date}</span></div></div>
-          <button className="admin-trigger" onClick={() => setAdminOpen(true)} aria-label="Открыть панель администратора"><Settings2 size={22} /><span>Админ-панель</span></button>
+          <button className="admin-trigger" onClick={() => setAdminOpen(true)} aria-label="Админ-панель / Әкімші панелі"><Settings2 size={22} /><span>Админ-панель</span></button>
         </div>
       </header>
 
       <section className="board-layout">
         <div className="schedule-panel">
-          <div className="panel-heading"><div><span className="eyebrow">РАСПИСАНИЕ</span><h2>Врачи и время приёма</h2></div><span className="today-pill"><span className="live-dot" />{days.find((day) => day.key === today)?.full}</span></div>
+          <div className="panel-heading"><div><span className="eyebrow">РАСПИСАНИЕ / ҚАБЫЛДАУ КЕСТЕСІ</span><h2>Врачи и время приёма / Дәрігерлер мен қабылдау уақыты</h2></div><div className="heading-actions"><button className="print-button" onClick={() => window.print()} aria-label="Печать / Басып шығару"><Printer size={16} /><span>Печать / Басып шығару</span></button><span className="today-pill"><span className="live-dot" /><span>{days.find((day) => day.key === today)?.full}</span><small>{days.find((day) => day.key === today)?.kkFull}</small></span></div></div>
           {boardError && <div className="connection-banner">{boardError}</div>}
           <div className="table-frame">
             <table className="schedule-table">
-              <thead><tr><th className="specialty-col">Специализация</th><th className="doctor-col">ФИО врача</th><th className="room-col">Каб.</th>{days.map((day) => <th className={day.key === today ? "today-column" : ""} key={day.key}>{day.short}</th>)}</tr></thead>
+              <thead><tr>
+                <th className="specialty-col"><span>Специализация</span><small>Мамандық</small></th>
+                <th className="doctor-col"><span>Врач</span><small>Дәрігер</small></th>
+                <th className="room-col"><span>Каб.</span><small>Кабинет</small></th>
+                {days.map((day) => <th className={day.key === today ? "today-column" : ""} key={day.key}><span>{day.short}</span><small>{day.kkShort}</small></th>)}
+              </tr></thead>
               <tbody>
                 {board.doctors.length ? board.doctors.map((doctor) => <tr key={doctor.id}>
-                  <td className="specialty-cell">{doctor.specialization || "—"}</td><td className="doctor-cell">{doctor.fullName || "—"}</td><td className="room-cell">{doctor.room || "—"}</td>
+                  <td className="specialty-cell"><span>{doctor.specialization || "—"}</span><small>{kazakhSpecialty(doctor.specialization)}</small></td><td className="doctor-cell" title={doctor.fullName}>{doctor.fullName || "—"}</td><td className="room-cell">{doctor.room || "—"}</td>
                   {days.map((day) => <td className={`hours-cell ${day.key === today ? "today-column" : ""}`} key={day.key}>{doctor.schedule?.[day.key] || <span className="off-mark">—</span>}</td>)}
                 </tr>) : <tr className="empty-row"><td colSpan={10}><div className="empty-state"><span className="empty-icon"><Stethoscope size={28} /></span><strong>Расписание пока не заполнено</strong><span>Добавьте врачей через админ-панель</span></div></td></tr>}
               </tbody>
             </table>
           </div>
-          <footer className="board-footer"><span><span className="footer-dot" />Расписание обновляется автоматически</span><span>Для уточнения времени обратитесь в регистратуру</span></footer>
+          <footer className="board-footer"><span><span className="footer-dot" /><span>Расписание обновляется автоматически<small>Кесте автоматты түрде жаңартылады</small></span></span><span>Для уточнения времени обратитесь в регистратуру<small>Уақытты нақтылау үшін тіркеу бөліміне хабарласыңыз</small></span></footer>
         </div>
 
         <aside className="rooms-panel">
-          <div className="rooms-title"><Building2 size={29} /><div><span className="eyebrow">НАВИГАЦИЯ</span><h2>Этажи и кабинеты</h2></div></div>
+          <div className="rooms-title"><Building2 size={29} /><div><span className="eyebrow">НАВИГАЦИЯ / БАҒЫТТАМА</span><h2>Этажи и кабинеты</h2><small>Қабаттар мен кабинеттер</small></div></div>
           <div className="rooms-scroll">
             {roomGroups.length ? roomGroups.map(([floor, rooms]) => <section className="floor-group" key={floor}>
-              <h3><span>{floor || "Этаж"}</span></h3>
-              <ul>{rooms.map((room) => <li key={room.id}><strong>{room.number}</strong><span className="room-separator">—</span><span>{room.name}</span></li>)}</ul>
+              <h3><span>{floor || "Этаж"}</span><small>{kazakhFloor(floor)}</small></h3>
+              <ul>{rooms.map((room) => <li key={room.id}><strong>{room.number}</strong><span className="room-separator">—</span><span className="room-name"><span>{room.name.match(/^(.*?)\s*\((.*?)\)\s*$/)?.[1] ?? room.name}</span><small>{kazakhRoomName(room.name)}</small></span></li>)}</ul>
             </section>) : <div className="rooms-empty"><DoorOpen size={26} /><span>Кабинеты появятся здесь</span><small>Добавьте их в админ-панели</small></div>}
           </div>
-          <div className="rooms-bottom"><span className="floor-mark"><Building2 size={15} /></span><span>Поможем найти нужный кабинет</span></div>
+          <div className="rooms-bottom"><span className="floor-mark"><Building2 size={15} /></span><span>Поможем найти нужный кабинет<small>Қажетті кабинетті табуға көмектесеміз</small></span></div>
         </aside>
       </section>
       {adminOpen && <AdminPanel board={board} onClose={() => setAdminOpen(false)} onSave={saveBoard} />}
