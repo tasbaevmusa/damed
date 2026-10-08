@@ -62,6 +62,8 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px s
 .location-info > div, .weather-info > div, .clock-info > div { min-width: 0; display: flex; flex-direction: column; gap: 3px; }
 .location-info strong, .weather-info strong, .clock-info strong { color: #eef7ff; font-size: clamp(.96rem, 1.12vw, 1.33rem); font-weight: 750; line-height: 1.15; white-space: nowrap; }
 .location-info span, .weather-info span, .clock-info span { overflow: hidden; max-width: 210px; color: #a8bdd8; font-size: clamp(.66rem, .72vw, .82rem); font-weight: 500; line-height: 1.25; text-overflow: ellipsis; white-space: normal; }
+.clock-info > div { gap: 1px; }
+.clock-info .clock-weekday { color: #73d8ef; font-size: clamp(.58rem, .64vw, .72rem); font-weight: 650; line-height: 1.1; white-space: nowrap; }
 .board-layout { height: calc(100dvh - 104px); min-height: 570px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(290px, 21%); gap: 0; padding: 13px 1.5vw 12px; }
 .schedule-panel { min-width: 0; min-height: 0; display: flex; flex-direction: column; padding-right: 1.15vw; }
 .panel-heading { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 65px; padding: 0 4px 9px; }
@@ -267,6 +269,7 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px s
   .clock-info svg { width: 20px; }
   .clock-info strong { font-size: .95rem; }
   .clock-info span { font-size: .66rem; }
+  .clock-info .clock-weekday { font-size: .56rem; }
   .title-block { grid-column: 1 / -1; }
   .title-block h1 { font-size: 1.04rem; }
   .title-block span { font-size: .61rem; }
@@ -320,6 +323,7 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px s
   .clock-info > svg { width: 17px; height: 17px; }
   .clock-info strong { font-size: .82rem; }
   .clock-info span { font-size: .58rem; }
+  .clock-info .clock-weekday { font-size: .45rem; }
   .board-layout { height: calc(100dvh - 82px); min-height: 0; grid-template-columns: minmax(0, 1fr) 210px; padding: 5px 10px 6px; }
   .schedule-panel { padding-right: 10px; }
   .panel-heading { min-height: 38px; padding: 0 2px 4px; gap: 6px; }
@@ -374,6 +378,7 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px s
   .clock-info > svg { width: 15px; height: 15px; }
   .clock-info strong { font-size: .76rem; }
   .clock-info span { font-size: .52rem; }
+  .clock-info .clock-weekday { font-size: .42rem; }
   .board-layout { height: calc(100dvh - 53px); }
 }
 
@@ -402,6 +407,7 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px s
   .clock-info > svg { width: 4mm; height: 4mm; }
   .clock-info strong { font-size: 8pt; }
   .clock-info span { max-width: none; font-size: 6.2pt; }
+  .clock-info .clock-weekday { max-width: none; color: #73d8ef; font-size: 5.3pt; }
   .board-layout { height: 177mm; min-height: 0; grid-template-columns: 73% 27%; padding: 2mm 0 0; }
   .schedule-panel { padding-right: 3mm; }
   .panel-heading { min-height: 10mm; padding: 0 0 1.5mm; }

@@ -235,13 +235,12 @@ function App() {
         <div className="header-info">
           <div className="location-info"><MapPin size={23} strokeWidth={2.6} /><div><strong>{board.clinic.city || "Алматы"} / {board.clinic.city || "Алматы"} қ.</strong><span>{address}<br />{kazakhAddress(address)}</span></div></div>
           <div className="weather-info"><CloudSun size={26} strokeWidth={2.3} /><div><strong>{weather ? `${weather.temperature > 0 ? "+" : ""}${weather.temperature}°` : "—"}</strong><span>{weather?.description ?? "Погода"}<br />{weather?.descriptionKk ?? "Ауа райы"}</span></div></div>
-          <div className="clock-info"><Clock3 size={24} strokeWidth={2.3} /><div><strong>{time}</strong><span>{date}</span></div></div>
+          <div className="clock-info"><Clock3 size={24} strokeWidth={2.3} /><div><strong>{time}</strong><span>{date}</span><small className="clock-weekday">{days.find((day) => day.key === today)?.full} / {days.find((day) => day.key === today)?.kkFull}</small></div></div>
         </div>
       </header>
 
       <section className="board-layout">
         <div className="schedule-panel">
-          <div className="panel-heading"><div><span className="eyebrow">РАСПИСАНИЕ / ҚАБЫЛДАУ КЕСТЕСІ</span><h2>Врачи и время приёма / Дәрігерлер мен қабылдау уақыты</h2></div><span className="today-pill"><span className="live-dot" /><span>{days.find((day) => day.key === today)?.full}</span><small>{days.find((day) => day.key === today)?.kkFull}</small></span></div>
           {boardError && <div className="connection-banner">{boardError}</div>}
           <div className="table-frame">
             <table className="schedule-table">
