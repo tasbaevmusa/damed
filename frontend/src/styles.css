@@ -105,6 +105,8 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px s
 .board-footer small { display: block; margin-top: 2px; color: #46b8d3; font-size: .9em; }
 .page-indicator { color: #b5d9ed; font-size: .94em; font-weight: 750; text-align: center; white-space: nowrap; }
 .page-indicator small { color: #55cde7; font-size: .82em; font-weight: 650; }
+.wake-status.active { color: #5be2b0; }
+.wake-status.unavailable { color: #ffc27a; }
 .footer-dot { width: 7px; height: 7px; }
 
 /* Administration */

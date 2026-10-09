@@ -121,7 +121,9 @@ function App() {
   const [now, setNow] = useState(new Date());
   const [weather, setWeather] = useState<Weather | null>(null);
   const [boardError, setBoardError] = useState("");
+  const [screenAwake, setScreenAwake] = useState(false);
   const [pageIndex, setPageIndex] = useState(0);
+  const isDisplayPage = window.location.pathname.replace(/\/+$/, "") !== "/login";
   const doctorsPerPage = 8;
   const pageCount = Math.ceil(board.doctors.length / doctorsPerPage);
   const currentPage = pageCount ? pageIndex % pageCount : 0;
@@ -159,6 +161,73 @@ function App() {
     }, 15_000);
     return () => window.clearInterval(rotation);
   }, [pageCount]);
+
+  useEffect(() => {
+    if (!isDisplayPage || !("wakeLock" in navigator)) {
+      setScreenAwake(false);
+      return;
+    }
+
+    let disposed = false;
+    let requesting = false;
+    let wakeLock: WakeLockSentinel | null = null;
+    let retryTimer: number | undefined;
+
+    const requestWakeLock = async () => {
+      if (disposed || requesting || wakeLock || document.visibilityState !== "visible") return;
+      requesting = true;
+      try {
+        const sentinel = await navigator.wakeLock.request("screen");
+        if (disposed || document.visibilityState !== "visible") {
+          await sentinel.release();
+          return;
+        }
+        wakeLock = sentinel;
+        setScreenAwake(true);
+        sentinel.addEventListener("release", () => {
+          if (wakeLock !== sentinel) return;
+          wakeLock = null;
+          setScreenAwake(false);
+          if (!disposed && document.visibilityState === "visible") {
+            retryTimer = window.setTimeout(() => void requestWakeLock(), 1_000);
+          }
+        }, { once: true });
+      } catch {
+        setScreenAwake(false);
+      } finally {
+        requesting = false;
+      }
+    };
+
+    const releaseWakeLock = (updateStatus = true) => {
+      if (!wakeLock) return;
+      const sentinel = wakeLock;
+      wakeLock = null;
+      if (updateStatus) setScreenAwake(false);
+      void sentinel.release().catch(() => undefined);
+    };
+    const onVisibilityChange = () => {
+      if (document.visibilityState === "visible") void requestWakeLock();
+      else releaseWakeLock();
+    };
+    const onUserActivity = () => void requestWakeLock();
+
+    void requestWakeLock();
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    document.addEventListener("pointerdown", onUserActivity, { passive: true });
+    document.addEventListener("keydown", onUserActivity);
+    window.addEventListener("focus", onUserActivity);
+
+    return () => {
+      disposed = true;
+      window.clearTimeout(retryTimer);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+      document.removeEventListener("pointerdown", onUserActivity);
+      document.removeEventListener("keydown", onUserActivity);
+      window.removeEventListener("focus", onUserActivity);
+      releaseWakeLock(false);
+    };
+  }, [isDisplayPage]);
 
   useEffect(() => {
     let active = true;
@@ -236,7 +305,7 @@ function App() {
               </> : <tbody><tr className="empty-row"><td colSpan={10}><div className="empty-state"><span className="empty-icon"><Stethoscope size={28} /></span><strong>Расписание пока не заполнено</strong><span>Добавьте врачей через админ-панель</span></div></td></tr></tbody>}
             </table>
           </div>
-          <footer className="board-footer"><span><span className="footer-dot" /><span>Расписание обновляется автоматически<small>Кесте автоматты түрде жаңартылады</small></span></span><span className="page-indicator" aria-label={`Страница ${currentPage + 1} из ${pageCount || 1}`}>
+          <footer className="board-footer"><span><span className="footer-dot" /><span>Расписание обновляется автоматически<small>Кесте автоматты түрде жаңартылады</small><small className={`wake-status ${screenAwake ? "active" : "unavailable"}`} aria-live="polite">{screenAwake ? "Экран остаётся включённым" : "Если ТВ засыпает, отключите энергосбережение"}</small></span></span><span className="page-indicator" aria-label={`Страница ${currentPage + 1} из ${pageCount || 1}`}>
             {pageCount > 1 ? `Врачи ${currentPage * doctorsPerPage + 1}–${Math.min((currentPage + 1) * doctorsPerPage, board.doctors.length)} из ${board.doctors.length} · ${String(currentPage + 1).padStart(2, "0")} / ${String(pageCount).padStart(2, "0")}` : `${board.doctors.length} врачей`}
             {pageCount > 1 && <small>Смена каждые 15 секунд</small>}
           </span><span>Для уточнения времени обратитесь в регистратуру<small>Уақытты нақтылау үшін тіркеу бөліміне хабарласыңыз</small></span></footer>
