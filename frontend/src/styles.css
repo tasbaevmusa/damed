@@ -64,14 +64,9 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px s
 .location-info span, .weather-info span, .clock-info span { overflow: hidden; max-width: 210px; color: #a8bdd8; font-size: clamp(.66rem, .72vw, .82rem); font-weight: 500; line-height: 1.25; text-overflow: ellipsis; white-space: normal; }
 .clock-info > div { gap: 1px; }
 .clock-info .clock-weekday { color: #73d8ef; font-size: clamp(.58rem, .64vw, .72rem); font-weight: 650; line-height: 1.1; white-space: nowrap; }
-.board-layout { height: calc(100dvh - 82px); min-height: 570px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(290px, 21%); gap: 0; padding: 13px 1.5vw 12px; }
-.schedule-panel { min-width: 0; min-height: 0; display: flex; flex-direction: column; padding-right: 1.15vw; }
-.panel-heading { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 65px; padding: 0 4px 9px; }
-.eyebrow { color: #39cdea; font-size: .67rem; font-weight: 800; letter-spacing: .2em; }
-.panel-heading h2, .rooms-title h2 { margin: 4px 0 0; color: #f3f8ff; font-size: clamp(1rem, 1.35vw, 1.48rem); font-weight: 750; letter-spacing: -.025em; }
-.today-pill { display: flex; align-items: center; gap: 7px; padding: 6px 9px; border: 1px solid rgba(32, 213, 245, .29); border-radius: 999px; color: #a5cee4; background: rgba(7, 59, 92, .44); font-size: .7rem; font-weight: 700; }
-.today-pill small { color: #73d8ef; font-size: .64rem; }
-.live-dot, .footer-dot { width: 8px; height: 8px; border-radius: 50%; background: #25ddae; box-shadow: 0 0 11px rgba(37, 221, 174, .55); }
+.board-layout { height: calc(100dvh - 82px); min-height: 570px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 0; padding: 13px 2.1vw 12px; }
+.schedule-panel { min-width: 0; min-height: 0; display: flex; flex-direction: column; padding-right: 0; }
+.footer-dot { width: 8px; height: 8px; border-radius: 50%; background: #25ddae; box-shadow: 0 0 11px rgba(37, 221, 174, .55); }
 .connection-banner { flex: 0 0 auto; margin: 0 0 10px; padding: 10px 14px; border: 1px solid rgba(255, 183, 88, .34); border-radius: 9px; color: #ffd39a; background: rgba(107, 59, 13, .2); font-size: .82rem; }
 .table-frame { flex: 1 1 auto; min-height: 0; overflow: auto; border: 1px solid rgba(36, 153, 211, .44); border-radius: 11px; background: rgba(5, 25, 55, .64); box-shadow: 0 10px 30px rgba(0, 0, 0, .14); scrollbar-color: #1479a0 transparent; scrollbar-width: thin; }
 .schedule-table { width: 100%; border-collapse: separate; border-spacing: 0; table-layout: fixed; }
@@ -107,30 +102,10 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px s
 .empty-icon { width: 53px; height: 53px; display: grid; place-items: center; margin-bottom: 3px; border: 1px solid rgba(41, 199, 234, .25); border-radius: 17px; color: #38cce9; background: rgba(9, 116, 152, .18); }
 .board-footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 39px; padding: 5px 4px 0; color: #7592b4; font-size: clamp(.62rem, .68vw, .74rem); font-weight: 550; }
 .board-footer > span:first-child { display: flex; align-items: flex-start; gap: 8px; }
-.board-footer small, .rooms-bottom small { display: block; margin-top: 2px; color: #46b8d3; font-size: .9em; }
+.board-footer small { display: block; margin-top: 2px; color: #46b8d3; font-size: .9em; }
+.page-indicator { color: #b5d9ed; font-size: .94em; font-weight: 750; text-align: center; white-space: nowrap; }
+.page-indicator small { color: #55cde7; font-size: .82em; font-weight: 650; }
 .footer-dot { width: 7px; height: 7px; }
-
-.rooms-panel { min-width: 0; min-height: 0; display: flex; flex-direction: column; padding: 7px 0 0 1.15vw; border-left: 1px solid rgba(29, 198, 238, .57); }
-.rooms-title { display: flex; align-items: center; gap: 12px; min-height: 59px; padding-bottom: 13px; color: #37d5ef; border-bottom: 1px solid rgba(44, 160, 207, .45); }
-.rooms-title h2 { margin-top: 4px; font-size: clamp(.96rem, 1.16vw, 1.28rem); }
-.rooms-title small { display: block; margin-top: 3px; color: #73d8ef; font-size: clamp(.64rem, .72vw, .76rem); font-weight: 700; }
-.rooms-title .eyebrow { font-size: .59rem; }
-.rooms-scroll { flex: 1; min-height: 0; overflow-y: auto; padding: 10px 0; scrollbar-color: #1479a0 transparent; scrollbar-width: thin; }
-.floor-group { padding: 0 0 8px; margin-bottom: 8px; border-bottom: 1px solid rgba(44, 160, 207, .44); }
-.floor-group:last-child { margin-bottom: 0; border-bottom: 0; }
-.floor-group h3 { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 29px; padding: 4px 10px; margin: 2px 0 6px; border-radius: 8px; color: #fff; background: linear-gradient(135deg, #16bfe3, #0789c5); box-shadow: 0 4px 14px rgba(4, 139, 192, .2); font-size: .75rem; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; }
-.floor-group h3 small { color: #e4faff; font-size: .88em; font-weight: 700; letter-spacing: 0; }
-.floor-group ul { display: grid; gap: 4px; padding: 0 3px 0 7px; margin: 0; list-style: none; }
-.floor-group li { display: grid; grid-template-columns: 36px 10px minmax(0, 1fr); align-items: start; gap: 3px; color: #c7d9ed; font-size: clamp(.72rem, .82vw, .9rem); line-height: 1.16; }
-.floor-group li strong { color: #31d5f3; font-size: 1.02em; font-weight: 800; }
-.room-separator { color: #5b95b6; }
-.room-name { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
-.room-name small { color: #73d8ef; font-size: .94em; line-height: 1.12; }
-.rooms-empty { min-height: 180px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; color: #41cce9; text-align: center; }
-.rooms-empty span { color: #d8e5f4; font-size: .9rem; font-weight: 700; }
-.rooms-empty small { color: #819ab8; font-size: .75rem; }
-.rooms-bottom { display: flex; align-items: center; gap: 8px; padding: 9px 0 0; border-top: 1px solid rgba(44, 160, 207, .3); color: #7f9cbd; font-size: .66rem; }
-.floor-mark { width: 24px; height: 24px; display: grid; place-items: center; border-radius: 8px; color: #43d2ed; background: rgba(11, 122, 157, .22); }
 
 /* Administration */
 .admin-page { min-height: 100dvh; display: grid; place-items: center; padding: 24px; background: linear-gradient(145deg, #071b3a, #0a315a); }
@@ -230,9 +205,8 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px s
   .header-info { gap: 12px; padding-left: 16px; }
   .location-info { flex: 1.05; }
   .weather-info { flex: .58; }
-  .board-layout { grid-template-columns: minmax(0, 1fr) 250px; padding-inline: 20px; }
-  .schedule-panel { padding-right: 17px; }
-  .rooms-panel { padding-left: 17px; }
+  .board-layout { grid-template-columns: minmax(0, 1fr); padding-inline: 20px; }
+  .schedule-panel { padding-right: 0; }
 }
 
 @media (max-width: 1050px) {
@@ -243,7 +217,7 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px s
   .title-block h1 { font-size: clamp(1.2rem, 3vw, 1.7rem); }
   .header-info { grid-column: 2; grid-row: 1; padding: 0; }
   .location-info { display: none; }
-  .board-layout { height: calc(100dvh - 108px); min-height: 500px; grid-template-columns: minmax(0, 1fr) 220px; padding: 9px 20px; }
+  .board-layout { height: calc(100dvh - 108px); min-height: 500px; grid-template-columns: minmax(0, 1fr); padding: 9px 20px; }
   .table-frame { overflow: hidden; }
   .schedule-table { min-width: 0; }
   .schedule-table th.specialty-col { width: 15%; }
@@ -254,7 +228,6 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px s
   .schedule-table td.specialty-cell { padding-left: 9px; }
   .schedule-table td.doctor-cell { padding-left: 8px; }
   .schedule-table td.hours-cell { font-size: clamp(.45rem, .78vw, .56rem); }
-  .rooms-panel { padding-left: 13px; }
 }
 
 @media (max-width: 760px) {
@@ -276,22 +249,12 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px s
   .title-block span { font-size: .61rem; }
   .board-layout { height: auto; min-height: calc(100dvh - 139px); display: flex; flex-direction: column; gap: 17px; padding: 13px 12px 18px; }
   .schedule-panel { min-height: 430px; padding: 0; }
-  .panel-heading { min-height: 67px; padding: 0 2px 10px; }
-  .panel-heading h2 { font-size: 1.04rem; }
-  .panel-heading .eyebrow { font-size: .58rem; }
-  .today-pill { padding: 6px 8px; font-size: .69rem; }
-  .live-dot { width: 6px; height: 6px; }
   .table-frame { overflow-x: auto; }
   .schedule-table { min-width: 875px; }
   .schedule-table th { height: 47px; font-size: .77rem; }
   .schedule-table td { height: 45px; font-size: .78rem; }
   .schedule-table td.hours-cell { font-size: .72rem; }
   .board-footer { align-items: flex-start; flex-direction: column; gap: 4px; padding-top: 9px; font-size: .65rem; }
-  .rooms-panel { min-height: 250px; padding: 11px 0 0; border-top: 1px solid rgba(29, 198, 238, .5); border-left: 0; }
-  .rooms-title { min-height: 48px; padding-bottom: 8px; }
-  .rooms-title h2 { font-size: 1.04rem; }
-  .rooms-scroll { overflow: visible; }
-  .floor-group { display: inline-block; width: 100%; vertical-align: top; }
   .admin-page { padding: 0; }
   .admin-panel { width: 100%; height: 100dvh; min-height: 100dvh; border: 0; border-radius: 0; }
   .admin-header { min-height: 76px; padding: 14px 17px; }
@@ -306,7 +269,6 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px s
 @media (max-width: 400px) {
   .header-info { gap: 6px; }
   .clock-info svg { display: none; }
-  .today-pill { max-width: 132px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .section-title-row { align-items: flex-start; flex-direction: column; }
 }
 
@@ -325,14 +287,8 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px s
   .clock-info strong { font-size: .82rem; }
   .clock-info span { font-size: .58rem; }
   .clock-info .clock-weekday { font-size: .45rem; }
-  .board-layout { height: calc(100dvh - 46px); min-height: 0; grid-template-columns: minmax(0, 1fr) 210px; padding: 5px 10px 6px; }
-  .schedule-panel { padding-right: 10px; }
-  .panel-heading { min-height: 38px; padding: 0 2px 4px; gap: 6px; }
-  .panel-heading .eyebrow { font-size: .5rem; letter-spacing: .1em; }
-  .panel-heading h2 { margin-top: 2px; font-size: .78rem; }
-  .today-pill { gap: 4px; padding: 4px 6px; font-size: .56rem; }
-  .today-pill small { font-size: .5rem; }
-  .live-dot { width: 5px; height: 5px; }
+  .board-layout { height: calc(100dvh - 46px); min-height: 0; grid-template-columns: minmax(0, 1fr); padding: 5px 10px 6px; }
+  .schedule-panel { padding-right: 0; }
   .table-frame { overflow: hidden; }
   .schedule-table { min-width: 0; }
   .schedule-table th { height: 28px; padding: 2px; font-size: .58rem; }
@@ -347,21 +303,7 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px s
   .schedule-table td.doctor-cell { padding-left: 3px; font-size: .62rem; letter-spacing: -.04em; }
   .schedule-table td.room-cell { font-size: .62rem; }
   .schedule-table td.hours-cell { font-size: clamp(.52rem, .68vw, .72rem); }
-  .board-footer { display: none; }
-  .rooms-panel { padding: 2px 0 0 8px; }
-  .rooms-title { min-height: 43px; gap: 7px; padding-bottom: 5px; }
-  .rooms-title > svg { width: 22px; height: 22px; }
-  .rooms-title .eyebrow { font-size: .46rem; }
-  .rooms-title h2 { margin-top: 2px; font-size: .76rem; }
-  .rooms-title small { margin-top: 1px; font-size: .54rem; }
-  .rooms-scroll { overflow: hidden; padding: 3px 0; }
-  .floor-group { padding-bottom: 3px; margin-bottom: 3px; }
-  .floor-group h3 { min-height: 19px; padding: 2px 6px; margin: 1px 0 3px; font-size: .55rem; }
-  .floor-group ul { gap: 2px; padding-left: 3px; }
-  .floor-group li { grid-template-columns: 24px 7px minmax(0, 1fr); gap: 2px; font-size: .58rem; line-height: 1.05; }
-  .room-name { gap: 0; }
-  .room-name small { font-size: .8em; line-height: 1.04; }
-  .rooms-bottom { display: none; }
+  .board-footer { min-height: 25px; font-size: .52rem; }
 }
 
 @media screen and (min-width: 761px) and (max-width: 1050px) and (max-height: 880px) {
@@ -384,6 +326,23 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px s
   .board-layout { height: calc(100dvh - 42px); }
 }
 
+@media screen and (min-width: 1200px) and (min-height: 700px) {
+  .screen { height: 100dvh; min-height: 0; }
+  .topbar { min-height: clamp(94px, 12.5vh, 138px); padding-inline: clamp(20px, 2.4vw, 46px); }
+  .board-layout { height: calc(100dvh - clamp(94px, 12.5vh, 138px)); min-height: 0; grid-template-columns: minmax(0, 1fr); padding: clamp(10px, 1.5vh, 18px) clamp(20px, 2.4vw, 46px) clamp(8px, 1.2vh, 14px); }
+  .schedule-panel { padding-right: 0; }
+  .table-frame { overflow: hidden; }
+  .schedule-table th { height: clamp(48px, 5.7vh, 62px); font-size: clamp(.75rem, .9vw, 1rem); }
+  .schedule-table td { height: clamp(48px, 7.3vh, 80px); padding: clamp(5px, .7vh, 9px) clamp(5px, .7vw, 12px); font-size: clamp(.78rem, .9vw, 1rem); }
+  .schedule-table td.specialty-cell { padding-left: clamp(8px, .8vw, 15px); font-size: clamp(.8rem, .95vw, 1.08rem); }
+  .schedule-table td.specialty-cell > small { font-size: .85em; }
+  .schedule-table td.doctor-cell { padding-left: clamp(8px, .8vw, 15px); font-size: clamp(.9rem, 1.04vw, 1.2rem); }
+  .schedule-table td.room-cell { font-size: clamp(.9rem, 1vw, 1.12rem); }
+  .schedule-table td.hours-cell { font-size: clamp(.76rem, .84vw, .96rem); }
+  .board-footer { min-height: clamp(34px, 4.4vh, 48px); font-size: clamp(.66rem, .72vw, .82rem); }
+  .page-indicator { font-size: clamp(.78rem, .92vw, 1.04rem); }
+}
+
 @page { size: A4 landscape; margin: 5mm; }
 
 @media print {
@@ -404,17 +363,14 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px s
   .location-info > svg { width: 4mm; height: 4mm; }
   .location-info strong { font-size: 7.4pt; }
   .location-info span { max-width: none; font-size: 6.1pt; line-height: 1.12; }
-  .weather-info, .today-pill { display: none !important; }
+  .weather-info { display: none !important; }
   .clock-info { flex: 0 0 auto; gap: 1.5mm; }
   .clock-info > svg { width: 4mm; height: 4mm; }
   .clock-info strong { font-size: 8pt; }
   .clock-info span { max-width: none; font-size: 6.2pt; }
   .clock-info .clock-weekday { max-width: none; color: #73d8ef; font-size: 5.3pt; }
-  .board-layout { height: 177mm; min-height: 0; grid-template-columns: 73% 27%; padding: 2mm 0 0; }
-  .schedule-panel { padding-right: 3mm; }
-  .panel-heading { min-height: 10mm; padding: 0 0 1.5mm; }
-  .panel-heading .eyebrow { font-size: 5.8pt; letter-spacing: .1em; }
-  .panel-heading h2 { margin-top: 1mm; font-size: 8.5pt; }
+  .board-layout { height: 177mm; min-height: 0; grid-template-columns: 100%; padding: 2mm 0 0; }
+  .schedule-panel { padding-right: 0; }
   .table-frame { flex: 0 0 auto; min-height: 0; overflow: visible; border-radius: 0; box-shadow: none; }
   .schedule-table { width: 100%; min-width: 0; border-collapse: collapse; }
   .schedule-table tbody.screen-doctors { display: none; }
@@ -437,22 +393,6 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px s
   .schedule-table .today-column, .schedule-table thead .today-column { background: inherit !important; box-shadow: none; }
   .off-mark { color: #5e7895; }
   .board-footer { display: none; }
-  .rooms-panel { padding: 0 0 0 3mm; border-left: 1px solid #63a8cc; }
-  .rooms-title { min-height: 12mm; gap: 2mm; padding-bottom: 1.5mm; color: #087fa9; border-bottom-color: #83bad5; }
-  .rooms-title > svg { width: 8mm; height: 8mm; }
-  .rooms-title .eyebrow { color: #087fa9; font-size: 5.5pt; letter-spacing: .1em; }
-  .rooms-title h2 { margin-top: .8mm; color: #12345e; font-size: 8.5pt; }
-  .rooms-title small { margin-top: .4mm; color: #167598; font-size: 6pt; }
-  .rooms-scroll { flex: 0 0 auto; min-height: 0; overflow: visible; padding: 1.5mm 0; }
-  .floor-group { padding: 0 0 1.5mm; margin-bottom: 1.5mm; border-bottom-color: #b8d5e7; }
-  .floor-group h3 { min-height: 7mm; padding: 1mm 2mm; margin: .5mm 0 1.2mm; border-radius: 1.5mm; color: #fff; background: #0789b7; box-shadow: none; font-size: 6.5pt; }
-  .floor-group h3 small { color: #e4faff; font-size: 5.8pt; }
-  .floor-group ul { gap: 1.1mm; padding: 0 .5mm 0 1.5mm; }
-  .floor-group li { grid-template-columns: 10mm 2mm minmax(0, 1fr); gap: .7mm; color: #12345e; font-size: 6.5pt; line-height: 1.05; }
-  .floor-group li strong { color: #087fa9; }
-  .room-separator { color: #6085a4; }
-  .room-name { gap: .35mm; }
-  .room-name small { color: #167598; font-size: 5.3pt; line-height: 1.04; }
-  .rooms-empty, .rooms-bottom { display: none !important; }
-  .schedule-panel, .rooms-panel, .floor-group, .schedule-table tr { break-inside: avoid; page-break-inside: avoid; }
+  .page-indicator { display: none; }
+  .schedule-panel, .schedule-table tr { break-inside: avoid; page-break-inside: avoid; }
 }

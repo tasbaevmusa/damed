@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react";
+import { useCallback, useEffect, useState, type FormEvent } from "react";
 import {
   ArrowLeft,
   Building2,
@@ -109,28 +109,6 @@ function kazakhSpecialty(value: string) {
   return translations[value.trim()] ?? "Мамандық";
 }
 
-function kazakhRoomName(value: string) {
-  const translations: Record<string, string> = {
-    "Гастроэнтеролог / Кардиолог": "Гастроэнтерология және кардиология кабинеттері",
-    "Врач УЗИ": "УДЗ дәрігері",
-    Офтальмолог: "Көз дәрігері",
-    "Кардиолог / Нефролог": "Кардиология және нефрология кабинеттері",
-    "Эндокринолог / Терапевт": "Эндокринолог / жалпы практика дәрігері",
-  };
-  if (translations[value]) return translations[value];
-  const translated = value.match(/^(.*?)\s*\((.*?)\)\s*$/);
-  if (translated) return translated[2];
-  return value;
-}
-
-function kazakhFloor(value: string) {
-  const translations: Record<string, string> = {
-    "1 этаж": "1 ҚАБАТ",
-    "Цокольный этаж": "ЖЕРТӨЛЕ ҚАБАТЫ",
-  };
-  return translations[value] ?? "ҚАБАТ";
-}
-
 function kazakhAddress(value: string) {
   if (!value) return "Мекенжай көрсетілмеген";
   if (value.trim().toLowerCase() === "ул. макатаева, 141/77") return "Мақатаев көшесі, 141/77";
@@ -143,7 +121,11 @@ function App() {
   const [now, setNow] = useState(new Date());
   const [weather, setWeather] = useState<Weather | null>(null);
   const [boardError, setBoardError] = useState("");
-  const visibleDoctors = board.doctors;
+  const [pageIndex, setPageIndex] = useState(0);
+  const doctorsPerPage = 8;
+  const pageCount = Math.ceil(board.doctors.length / doctorsPerPage);
+  const currentPage = pageCount ? pageIndex % pageCount : 0;
+  const visibleDoctors = board.doctors.slice(currentPage * doctorsPerPage, (currentPage + 1) * doctorsPerPage);
   const renderDoctorRow = (doctor: Doctor, keyPrefix: string) => <tr key={`${keyPrefix}-${doctor.id}`}>
     <td className="specialty-cell"><span>{doctor.specialization === "Врач ультразвуковой диагностики" ? "Врач УЗИ" : doctor.specialization || "—"}</span><small>{kazakhSpecialty(doctor.specialization)}</small></td><td className="doctor-cell" title={doctor.fullName}>{doctor.fullName || "—"}</td><td className="room-cell">{doctor.room || "—"}</td>
     {days.map((day) => <td className={`hours-cell ${day.key === today ? "today-column" : ""}`} key={day.key}>{doctor.schedule?.[day.key] || <span className="off-mark">—</span>}</td>)}
@@ -169,6 +151,14 @@ function App() {
       window.clearInterval(clock);
     };
   }, [loadBoard]);
+
+  useEffect(() => {
+    if (pageCount <= 1) return;
+    const rotation = window.setInterval(() => {
+      setPageIndex((current) => (current + 1) % pageCount);
+    }, 15_000);
+    return () => window.clearInterval(rotation);
+  }, [pageCount]);
 
   useEffect(() => {
     let active = true;
@@ -203,16 +193,6 @@ function App() {
   const time = new Intl.DateTimeFormat("ru-RU", { hour: "2-digit", minute: "2-digit", timeZone: timezone }).format(now);
   const date = new Intl.DateTimeFormat("ru-RU", { day: "2-digit", month: "2-digit", year: "numeric", timeZone: timezone }).format(now);
   const address = board.clinic.address || "ул. Макатаева, 141/77";
-  const roomGroups = useMemo(() => {
-    const groups = new Map<string, Room[]>();
-    for (const room of board.rooms) {
-      const group = groups.get(room.floor) ?? [];
-      group.push(room);
-      groups.set(room.floor, group);
-    }
-    return [...groups.entries()];
-  }, [board.rooms]);
-
   const saveBoard = async (nextBoard: Board) => {
     await api("/api/board", { method: "PUT", body: JSON.stringify({ board: nextBoard }) });
     setBoard(nextBoard);
@@ -251,24 +231,16 @@ function App() {
                 {days.map((day) => <th className={day.key === today ? "today-column" : ""} key={day.key}><span>{day.short}</span><small>{day.kkShort}</small></th>)}
               </tr></thead>
               {board.doctors.length ? <>
-                <tbody className="screen-doctors">{visibleDoctors.map((doctor) => renderDoctorRow(doctor, "screen"))}</tbody>
+                <tbody className="screen-doctors" key={currentPage}>{visibleDoctors.map((doctor) => renderDoctorRow(doctor, "screen"))}</tbody>
                 <tbody className="print-doctors">{board.doctors.map((doctor) => renderDoctorRow(doctor, "print"))}</tbody>
               </> : <tbody><tr className="empty-row"><td colSpan={10}><div className="empty-state"><span className="empty-icon"><Stethoscope size={28} /></span><strong>Расписание пока не заполнено</strong><span>Добавьте врачей через админ-панель</span></div></td></tr></tbody>}
             </table>
           </div>
-          <footer className="board-footer"><span><span className="footer-dot" /><span>Расписание обновляется автоматически<small>Кесте автоматты түрде жаңартылады</small></span></span><span>Для уточнения времени обратитесь в регистратуру<small>Уақытты нақтылау үшін тіркеу бөліміне хабарласыңыз</small></span></footer>
+          <footer className="board-footer"><span><span className="footer-dot" /><span>Расписание обновляется автоматически<small>Кесте автоматты түрде жаңартылады</small></span></span><span className="page-indicator" aria-label={`Страница ${currentPage + 1} из ${pageCount || 1}`}>
+            {pageCount > 1 ? `Врачи ${currentPage * doctorsPerPage + 1}–${Math.min((currentPage + 1) * doctorsPerPage, board.doctors.length)} из ${board.doctors.length} · ${String(currentPage + 1).padStart(2, "0")} / ${String(pageCount).padStart(2, "0")}` : `${board.doctors.length} врачей`}
+            {pageCount > 1 && <small>Смена каждые 15 секунд</small>}
+          </span><span>Для уточнения времени обратитесь в регистратуру<small>Уақытты нақтылау үшін тіркеу бөліміне хабарласыңыз</small></span></footer>
         </div>
-
-        <aside className="rooms-panel">
-          <div className="rooms-title"><Building2 size={29} /><div><span className="eyebrow">НАВИГАЦИЯ / БАҒЫТТАМА</span><h2>Этажи и кабинеты</h2><small>Қабаттар мен кабинеттер</small></div></div>
-          <div className="rooms-scroll">
-            {roomGroups.length ? roomGroups.map(([floor, rooms]) => <section className="floor-group" key={floor}>
-              <h3><span>{floor || "Этаж"}</span><small>{kazakhFloor(floor)}</small></h3>
-              <ul>{rooms.map((room) => <li key={room.id}><strong>{room.number}</strong><span className="room-separator">—</span><span className="room-name"><span>{room.name.match(/^(.*?)\s*\((.*?)\)\s*$/)?.[1] ?? room.name}</span><small>{kazakhRoomName(room.name)}</small></span></li>)}</ul>
-            </section>) : <div className="rooms-empty"><DoorOpen size={26} /><span>Кабинеты появятся здесь</span><small>Добавьте их в админ-панели</small></div>}
-          </div>
-          <div className="rooms-bottom"><span className="floor-mark"><Building2 size={15} /></span><span>Поможем найти нужный кабинет<small>Қажетті кабинетті табуға көмектесеміз</small></span></div>
-        </aside>
       </section>
     </main>
   );
